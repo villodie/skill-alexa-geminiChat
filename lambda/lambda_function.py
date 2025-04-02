@@ -48,15 +48,15 @@ class LaunchRequestHandler(AbstractRequestHandler):
 
     def handle(self, handler_input):
         # type: (HandlerInput) -> Response
-        data["contents"][0]["parts"][0]["text"] = "Você será minha assistente de I.A. Te daria comandos e iremos interagir conforme lhe orientar e treinar."
+        data["contents"][0]["parts"][0]["text"] = "Serás mi A.I. asistente. Te daría órdenes e interactuaremos mientras te guiamos y entrenamos."
         response = requests.post(url, json=data, headers=headers)
         if response.status_code == 200:
             response_data = response.json()
             text = (response_data.get("candidates", [{}])[0]
                 .get("content", {})
                 .get("parts", [{}])[0]
-                .get("text", "Texto não encontrado"))
-            speak_output = text + " Como posso te ajudar?"
+                .get("text", "Texto no encontrado"))
+            speak_output = text + " Como te puedo ayudar?"
             response_text = {
                 "role": "model",
                 "parts": [{
@@ -65,7 +65,7 @@ class LaunchRequestHandler(AbstractRequestHandler):
             }
             data["contents"].append(response_text)
         else:
-            speak_output = "Erro na requsição"
+            speak_output = "Error de solicitud"
             
         return (
             handler_input.response_builder
@@ -97,7 +97,7 @@ class ChatIntentHandler(AbstractRequestHandler):
             text = (response_data.get("candidates", [{}])[0]
                 .get("content", {})
                 .get("parts", [{}])[0]
-                .get("text", "Texto não encontrado"))
+                .get("text", "Texto no encontrado"))
             speak_output = text
             response_text = {
                 "role": "model",
@@ -107,12 +107,12 @@ class ChatIntentHandler(AbstractRequestHandler):
             }
             data["contents"].append(response_text)
         else:
-            speak_output = "Não obtive uma resposta para sua solicitação"
+            speak_output = "No recibi respuesta a tu solicitud"
 
         return (
             handler_input.response_builder
                 .speak(speak_output)
-                .ask("Alguma outra pergunta?")
+                .ask("Alguna otra pregunta?")
                 .response
         )
 
